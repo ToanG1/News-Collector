@@ -1,3 +1,5 @@
+import { Status } from "../../common/enums/status.interface";
+
 export interface ITask {
   code?: string;
   name: string;
@@ -13,4 +15,16 @@ export interface ITaskConfig {
   source: string;
   isEnabled: boolean;
   runAt: number;
+}
+
+export interface IUpdateTaskConfig {
+  taskId: string;
+  isEnabled: boolean;
+  runAt: number;
+}
+
+export interface ITaskLog {
+  taskId: string;
+  status: Status;
+  description?: string;
 }

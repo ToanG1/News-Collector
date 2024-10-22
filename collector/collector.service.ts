@@ -1,7 +1,11 @@
 import { SQLDatabase } from "encore.dev/storage/sqldb";
-import { ITask, ITaskConfig } from "./dto/task.interface";
+import {
+  ITask,
+  ITaskConfig,
+  ITaskLog,
+  IUpdateTaskConfig,
+} from "./dto/task.interface";
 import { randomUUID } from "crypto";
-import { ITaskLog } from "./dto/task-log.interface";
 import { ICategory } from "./dto/category.interface";
 import { INewsSource } from "./dto/news-source.interface";
 
@@ -32,6 +36,15 @@ export const updateTask = async (task: ITask): Promise<void> => {
           NEWS_SOURCE_ID = ${task.newsSourceId}
       WHERE CODE = ${task.code!}
     `;
+};
+
+export const updateTaskConfig = async (task: IUpdateTaskConfig): Promise<void> => {
+  await database.exec`
+      UPDATE TASK_CONFIGS
+      SET IS_ENABLED = ${task.isEnabled}, 
+          RUN_AT = ${task.runAt}
+      WHERE TASK_ID = ${task.taskId}
+      `;
 };
 
 export const getTasks = async (): Promise<ITaskConfig[]> => {

@@ -1,6 +1,6 @@
 import { api } from "encore.dev/api";
 import { Status } from "../common/enums/status.interface";
-import { ITask, ITaskConfig } from "./dto/task.interface";
+import { ITask, ITaskConfig, IUpdateTaskConfig } from "./dto/task.interface";
 import {
   createCategory,
   createNewsSource,
@@ -12,6 +12,8 @@ import {
   saveTaskLog,
   updateCategory,
   updateNewsSource,
+  updateTask,
+  updateTaskConfig,
 } from "./collector.service";
 import { IResponse } from "../common/dto/response.interface";
 import { ICategory } from "./dto/category.interface";
@@ -57,6 +59,30 @@ export const getTasksAPI = api(
   },
   async (): Promise<{ tasks: ITaskConfig[] }> => {
     return { tasks: await getTasks() };
+  }
+);
+
+export const updateTaskAPI = api(
+  {
+    expose: true,
+    method: "PUT",
+    path: "/collector/task",
+  },
+  async (request: ITask): Promise<IResponse> => {
+    await updateTask(request);
+    return { message: "Task updated" };
+  }
+);
+
+export const updateTaskConfigAPI = api(
+  {
+    expose: true,
+    method: "PUT",
+    path: "/collector/task-config",
+  },
+  async (request: IUpdateTaskConfig): Promise<IResponse> => {
+    await updateTaskConfig(request);
+    return { message: "Task config updated" };
   }
 );
 
