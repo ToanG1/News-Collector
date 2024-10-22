@@ -1,8 +1,8 @@
 import { CronJob } from "encore.dev/cron";
-import { newsColelctor } from "./collector.controller";
+import { newsColelctorAPI } from "./collector.controller";
 
 const _ = new CronJob("News Collector", {
-  title: "Send welcome emails",
+  title: "New Collector Cron",
   every: "60s",
-  endpoint: newsColelctor,
+  endpoint: newsColelctorAPI,
 });
