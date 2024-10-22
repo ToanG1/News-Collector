@@ -1,12 +1,14 @@
 import { api } from "encore.dev/api";
 import { Status } from "../common/enums/status.interface";
-import { ITask } from "./dto/task.interface";
+import { ITask, ITaskConfig } from "./dto/task.interface";
 import {
   createCategory,
   createNewsSource,
   createTask,
   getCategories,
   getNewsSources,
+  getTasks,
+  getTasksNeedToRun,
   saveTaskLog,
   updateCategory,
   updateNewsSource,
@@ -15,19 +17,48 @@ import { IResponse } from "../common/dto/response.interface";
 import { ICategory } from "./dto/category.interface";
 import { INewsSource } from "./dto/news-source.interface";
 
-export const newsColelctorAPI = api({}, async (): Promise<IResponse> => {
-  const task: ITask = {
-    name: "Send welcome emails",
-    description: "Send welcome emails to users",
-    categoryId: 1,
-    newsSourceId: 1,
-  };
+export const newsSerpColelctorAPI = api({}, async (): Promise<IResponse> => {
+  const tasks = await getTasksNeedToRun();
 
-  const taskId = await createTask(task);
-  saveTaskLog({ taskId: taskId, status: Status.DONE });
-
-  return { message: `Task ${taskId} was stopped with status ${Status.DONE}` };
+  for await (const task of tasks) {
+    await saveTaskLog({ taskId: task.code!, status: Status.IN_PROGRESS });
+    try {
+      console.log(`Task ${task.code} is running...`);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await saveTaskLog({ taskId: task.code!, status: Status.DONE });
+    } catch (error: any) {
+      await saveTaskLog({
+        taskId: task.code!,
+        status: Status.FAILED,
+        description: error,
+      });
+    }
+  }
+  return { message: `Done with ${tasks.length} tasks` };
 });
+
+export const createTaskAPI = api(
+  {
+    expose: true,
+    method: "POST",
+    path: "/collector/task",
+  },
+  async (request: ITask): Promise<IResponse> => {
+    const taskId = await createTask(request);
+    return { message: `Task ${taskId} was created` };
+  }
+);
+
+export const getTasksAPI = api(
+  {
+    expose: true,
+    method: "GET",
+    path: "/collector/task",
+  },
+  async (): Promise<{ tasks: ITaskConfig[] }> => {
+    return { tasks: await getTasks() };
+  }
+);
 
 export const addCategoryAPI = api(
   {
