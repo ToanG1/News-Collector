@@ -1,8 +1,17 @@
-import { api } from "encore.dev/api";
+import { api, APIError, ErrCode } from "encore.dev/api";
 import { IResponse } from "../common/dto/response.interface";
 import { ICategory } from "./dto/category.interface";
 import { INewsSource } from "./dto/news-source.interface";
-import { createCategory, getCategories, updateCategory, createNewsSource, getNewsSources, updateNewsSource } from "./sources.service";
+import {
+  createCategory,
+  getCategories,
+  updateCategory,
+  createNewsSource,
+  getNewsSources,
+  updateNewsSource,
+  getCategoryById,
+  getNewsSourceById,
+} from "./sources.service";
 
 export const addCategoryAPI = api(
   {
@@ -24,6 +33,22 @@ export const getCategoriesAPI = api(
   },
   async (): Promise<{ categories: ICategory[] }> => {
     return { categories: await getCategories() };
+  }
+);
+
+export const getCategoryByIdAPI = api(
+  {
+    expose: true,
+    method: "GET",
+    path: "/collector/category/:id",
+  },
+  async (params: { id: number }): Promise<ICategory> => {
+    const category = await getCategoryById(params.id);
+    if (!category) {
+      throw new APIError(ErrCode.NotFound, "Category not found");
+    }
+
+    return category;
   }
 );
 
@@ -59,6 +84,22 @@ export const getNewsSourcesAPI = api(
   },
   async (): Promise<{ newsSources: INewsSource[] }> => {
     return { newsSources: await getNewsSources() };
+  }
+);
+
+export const getNewsSourceByIdAPI = api(
+  {
+    expose: true,
+    method: "GET",
+    path: "/collector/news-source/:id",
+  },
+  async (params: { id: number }): Promise<INewsSource> => {
+    const newsSource = await getNewsSourceById(params.id);
+    if (!newsSource) {
+      throw new APIError(ErrCode.NotFound, "News source not found");
+    }
+
+    return newsSource;
   }
 );
 

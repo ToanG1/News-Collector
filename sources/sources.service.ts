@@ -21,11 +21,18 @@ export const updateCategory = async (category: ICategory): Promise<void> => {
 
 export const getCategories = async (): Promise<ICategory[]> => {
   const result: ICategory[] = [];
+
   const rows = await database.query<ICategory>`SELECT * FROM CATEGORY`;
   for await (const row of rows) {
     result.push(row);
   }
   return result;
+};
+
+export const getCategoryById = async (
+  id: number
+): Promise<ICategory | null> => {
+  return await database.queryRow<ICategory>`SELECT * FROM CATEGORY WHERE ID = ${id}`;
 };
 
 export const createNewsSource = async (
@@ -38,13 +45,19 @@ export const createNewsSource = async (
     `;
 };
 
-export const getNewsSources = async () => {
+export const getNewsSources = async (): Promise<INewsSource[]> => {
   const result: INewsSource[] = [];
   const rows = await database.query<INewsSource>`SELECT * FROM NEWS_SOURCES`;
   for await (const row of rows) {
     result.push(row);
   }
   return result;
+};
+
+export const getNewsSourceById = async (
+  id: number
+): Promise<INewsSource | null> => {
+  return await database.queryRow<INewsSource>`SELECT * FROM NEWS_SOURCES WHERE ID=${id}`;
 };
 
 export const updateNewsSource = async (
