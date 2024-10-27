@@ -45,22 +45,34 @@ export const fetchNewsApi = api(
 
 export const extractNewsFrmSerpApi = api(
   {},
-  async (request: IExtractNewsFromHTMLRequest): Promise<IExtractedNews> => {
+  async (
+    request: IExtractNewsFromHTMLRequest
+  ): Promise<{ news: IExtractedNews[] }> => {
+    const date = new Date().toString();
+    const news: IExtractedNews[] = [];
     const doc = new JSDOM(request.html).window.document;
 
-    const title = doc.querySelector(request.selectors.title)?.textContent;
-    const image = doc
-      .querySelector(request.selectors.image)
-      ?.getAttribute("src");
-    const link = doc
-      .querySelector(request.selectors.postLink)
-      ?.getAttribute("href");
+    const items = doc.querySelectorAll(request.selectors.items);
+    for (const item of items) {
+      const title = item.querySelector(request.selectors.title)?.textContent;
 
-    return {
-      title: title || "",
-      url: link || "",
-      image: image || "",
-      date: new Date(),
-    };
+      const imageElement = doc.querySelector(request.selectors.image);
+      const image =
+        imageElement?.getAttribute("data-src-image") ||
+        imageElement?.getAttribute("src");
+
+      const link = doc
+        .querySelector(request.selectors.postLink)
+        ?.getAttribute("href");
+
+      news.push({
+        title: title || "",
+        url: link || "",
+        image: image || "",
+        date,
+      });
+    }
+
+    return { news };
   }
 );
