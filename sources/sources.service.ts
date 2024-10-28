@@ -1,6 +1,6 @@
 import { SQLDatabase } from "encore.dev/storage/sqldb";
 import { ICategory } from "./dto/category.interface";
-import { INewsSource } from "./dto/news-source.interface";
+import { INewsSource, INewsSourceSelector } from "./dto/news-source.interface";
 
 const database = new SQLDatabase("sources", { migrations: "./migrations" });
 
@@ -47,9 +47,26 @@ export const createNewsSource = async (
 
 export const getNewsSources = async (): Promise<INewsSource[]> => {
   const result: INewsSource[] = [];
-  const rows = await database.query<INewsSource>`SELECT * FROM NEWS_SOURCES`;
+  const rows = await database.query`
+      SELECT ns.*, nss.* FROM NEWS_SOURCES ns
+      JOIN PUBLISHERS p ON ns.PUBLISHER_ID = p.ID
+      JOIN NEW_SOURCES_SELECTORS nss ON nss.PUBLISHER_ID = p.ID
+  `;
   for await (const row of rows) {
-    result.push(row);
+    result.push({
+      id: row.id,
+      name: row.name,
+      link: row.link,
+      description: row.description,
+      headers: JSON.parse(row.headers),
+      selector: {
+        items: row.items,
+        title: row.title,
+        image: row.image,
+        postLink: row.post_link,
+        content: row.content,
+      },
+    });
   }
   return result;
 };
@@ -57,7 +74,31 @@ export const getNewsSources = async (): Promise<INewsSource[]> => {
 export const getNewsSourceById = async (
   id: number
 ): Promise<INewsSource | null> => {
-  return await database.queryRow<INewsSource>`SELECT * FROM NEWS_SOURCES WHERE ID=${id}`;
+  const row = await database.queryRow`
+      SELECT ns.*, nss.* FROM NEWS_SOURCES ns
+      JOIN PUBLISHERS p ON ns.PUBLISHER_ID = p.ID
+      JOIN NEW_SOURCES_SELECTORS nss ON nss.PUBLISHER_ID = p.ID
+      WHERE ns.ID=${id}
+  `;
+
+  if (!row) {
+    return null;
+  }
+
+  return {
+    id: row.id,
+    name: row.name,
+    link: row.link,
+    description: row.description,
+    headers: JSON.parse(row.headers),
+    selector: {
+      items: row.items,
+      title: row.title,
+      image: row.image,
+      postLink: row.post_link,
+      content: row.content,
+    },
+  };
 };
 
 export const updateNewsSource = async (

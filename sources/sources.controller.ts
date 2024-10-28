@@ -17,7 +17,7 @@ export const addCategoryAPI = api(
   {
     expose: true,
     method: "POST",
-    path: "/collector/category",
+    path: "/sources/category",
   },
   async (request: ICategory): Promise<IResponse> => {
     await createCategory(request);
@@ -29,7 +29,7 @@ export const getCategoriesAPI = api(
   {
     expose: true,
     method: "GET",
-    path: "/collector/category",
+    path: "/sources/category",
   },
   async (): Promise<{ categories: ICategory[] }> => {
     return { categories: await getCategories() };
@@ -40,7 +40,7 @@ export const getCategoryByIdAPI = api(
   {
     expose: true,
     method: "GET",
-    path: "/collector/category/:id",
+    path: "/sources/category/:id",
   },
   async (params: { id: number }): Promise<ICategory> => {
     const category = await getCategoryById(params.id);
@@ -56,7 +56,7 @@ export const updateCategoryAPI = api(
   {
     expose: true,
     method: "PUT",
-    path: "/collector/category",
+    path: "/sources/category",
   },
   async (request: ICategory): Promise<IResponse> => {
     await updateCategory(request);
@@ -68,7 +68,7 @@ export const addNewsSourceAPI = api(
   {
     expose: true,
     method: "POST",
-    path: "/collector/news-source",
+    path: "/sources/news-source",
   },
   async (request: INewsSource): Promise<IResponse> => {
     await createNewsSource(request);
@@ -80,7 +80,7 @@ export const getNewsSourcesAPI = api(
   {
     expose: true,
     method: "GET",
-    path: "/collector/news-source",
+    path: "/sources/news-source",
   },
   async (): Promise<{ newsSources: INewsSource[] }> => {
     return { newsSources: await getNewsSources() };
@@ -91,7 +91,7 @@ export const getNewsSourceByIdAPI = api(
   {
     expose: true,
     method: "GET",
-    path: "/collector/news-source/:id",
+    path: "/sources/news-source/:id",
   },
   async (params: { id: number }): Promise<INewsSource> => {
     const newsSource = await getNewsSourceById(params.id);
@@ -107,7 +107,7 @@ export const updateNewsSourceAPI = api(
   {
     expose: true,
     method: "PUT",
-    path: "/collector/news-source",
+    path: "/sources/news-source",
   },
   async (request: INewsSource): Promise<IResponse> => {
     await updateNewsSource(request);
