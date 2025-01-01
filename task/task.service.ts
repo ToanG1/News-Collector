@@ -69,7 +69,7 @@ export const getTasks = async (): Promise<ITaskConfig[]> => {
 
 export const getTasksNeedToRun = async (): Promise<ITask[]> => {
   const result: ITask[] = [];
-  const rows = await database.query<ITask>`
+  const rows = await database.query`
       SELECT T.*
       FROM TASKS T
       JOIN TASK_CONFIGS TC ON T.CODE = TC.TASK_ID
@@ -77,7 +77,13 @@ export const getTasksNeedToRun = async (): Promise<ITask[]> => {
       AND TC.RUN_AT = EXTRACT(HOUR FROM CURRENT_TIMESTAMP);
   `;
   for await (const row of rows) {
-    result.push(row);
+    result.push({
+      code: row.code,
+      name: row.name,
+      description: row.description,
+      categoryId: row.category_id,
+      newsSourceId: row.news_source_id,
+    });
   }
   return result;
 };

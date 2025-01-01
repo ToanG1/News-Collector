@@ -15,6 +15,7 @@ import { ITask } from "../task/dto/task.interface";
 import { INewsSource } from "../sources/dto/news-source.interface";
 
 export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
+  console.log(task);
   const newsSource: INewsSource = await sources.getNewsSourceByIdAPI({
     id: task.newsSourceId!,
   });
