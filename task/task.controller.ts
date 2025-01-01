@@ -19,8 +19,8 @@ export const newsCollectorAPI = api({}, async (): Promise<IResponse> => {
   for await (const task of tasks) {
     await saveTaskLog({ taskId: task.code!, status: Status.IN_PROGRESS });
     try {
-      await saveTaskLog({ taskId: task.code!, status: Status.DONE });
       getNewsApi(task);
+      saveTaskLog({ taskId: task.code!, status: Status.DONE });
       finishedTaskCount++;
     } catch (error: any) {
       await saveTaskLog({
@@ -31,7 +31,9 @@ export const newsCollectorAPI = api({}, async (): Promise<IResponse> => {
     }
   }
   return {
-    message: `${finishedTaskCount} tasks finished and ${
+    message: `Total: ${
+      tasks.length
+    } with ${finishedTaskCount} tasks finished and ${
       tasks.length - finishedTaskCount
     } tasks failed`,
   };
