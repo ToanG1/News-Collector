@@ -26,5 +26,5 @@ export interface IUpdateTaskConfig {
 export interface ITaskLog {
   taskId: string;
   status: Status;
-  description?: string;
+  description?: any;
 }

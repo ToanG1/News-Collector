@@ -1,4 +1,4 @@
-import { api } from "encore.dev/api";
+import { api, APIError, ErrCode } from "encore.dev/api";
 import { JSDOM } from "jsdom";
 import {
   IFetchRequest,
@@ -15,13 +15,9 @@ import { ITask } from "../task/dto/task.interface";
 import { INewsSource } from "../sources/dto/news-source.interface";
 
 export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
-  console.log(task);
   const newsSource: INewsSource = await sources.getNewsSourceByIdAPI({
-    id: task.newsSourceId!,
+    id: task.newsSourceId,
   });
-  if (!newsSource) {
-    throw new Error("News source not found ! ID:" + task.newsSourceId);
-  }
 
   const fetchResponse: IFetchResponse = await fetchNewsApi({
     url: newsSource.link,

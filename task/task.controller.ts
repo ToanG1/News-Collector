@@ -1,4 +1,4 @@
-import { api } from "encore.dev/api";
+import { api, APIError } from "encore.dev/api";
 import { Status } from "../common/enums/status.interface";
 import { ITask, ITaskConfig, IUpdateTaskConfig } from "./dto/task.interface";
 import {
@@ -19,17 +19,18 @@ export const newsCollectorAPI = api({}, async (): Promise<IResponse> => {
   for await (const task of tasks) {
     await saveTaskLog({ taskId: task.code!, status: Status.IN_PROGRESS });
     try {
-      getNewsApi(task);
-      saveTaskLog({ taskId: task.code!, status: Status.DONE });
+      await getNewsApi(task);
+      await saveTaskLog({ taskId: task.code!, status: Status.DONE });
       finishedTaskCount++;
     } catch (error: any) {
       await saveTaskLog({
         taskId: task.code!,
         status: Status.FAILED,
-        description: error,
+        description: JSON.stringify(error),
       });
     }
   }
+
   return {
     message: `Total: ${
       tasks.length

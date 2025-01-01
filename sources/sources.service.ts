@@ -53,13 +53,12 @@ export const createNewsSource = async (
 export const getNewsSources = async (): Promise<INewsSource[]> => {
   const result: INewsSource[] = [];
   const rows = await database.query`
-      SELECT ns.*, nss.* FROM NEWS_SOURCES ns
-      JOIN PUBLISHERS p ON ns.PUBLISHER_ID = p.ID
-      JOIN NEW_SOURCES_SELECTORS nss ON nss.PUBLISHER_ID = p.ID
+      SELECT ns.ID AS NS_ID, ns.*, nss.* FROM NEWS_SOURCES ns
+      JOIN NEW_SOURCES_SELECTORS nss ON nss.PUBLISHER_ID = ns.PUBLISHER_ID
   `;
   for await (const row of rows) {
     result.push({
-      id: row.id,
+      id: row.ns_id,
       publisherId: row.publisher_id,
       categoryId: row.category_id,
       name: row.name,
@@ -83,11 +82,10 @@ export const getNewsSourceById = async (
 ): Promise<INewsSource | null> => {
   const row = await database.queryRow`
       SELECT ns.*, nss.* FROM NEWS_SOURCES ns
-      JOIN PUBLISHERS p ON ns.PUBLISHER_ID = p.ID
-      JOIN NEW_SOURCES_SELECTORS nss ON nss.PUBLISHER_ID = p.ID
+      JOIN NEW_SOURCES_SELECTORS nss ON nss.PUBLISHER_ID = ns.PUBLISHER_ID
       WHERE ns.ID=${id}
   `;
-
+  console.log(row);
   if (!row) {
     return null;
   }
