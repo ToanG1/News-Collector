@@ -11,8 +11,8 @@ export interface ITask {
 export interface ITaskConfig {
   taskId: string;
   name: string;
-  category: string;
-  source: string;
+  categoryId: number;
+  sourceId: string;
   isEnabled: boolean;
   runAt: number;
 }

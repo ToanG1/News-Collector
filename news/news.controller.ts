@@ -13,16 +13,8 @@ import {
 import { sources } from "~encore/clients";
 import { ITask } from "../task/dto/task.interface";
 import { INewsSource } from "../sources/dto/news-source.interface";
-import { ICategory } from "../sources/dto/category.interface";
 
 export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
-  const category: ICategory = await sources.getCategoryByIdAPI({
-    id: task.categoryId!,
-  });
-  if (!category) {
-    throw new Error("Category not found ! ID:" + task.categoryId!);
-  }
-
   const newsSource: INewsSource = await sources.getNewsSourceByIdAPI({
     id: task.newsSourceId!,
   });
@@ -37,7 +29,7 @@ export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
   });
 
   if (!fetchResponse.body) {
-    throw new Error("News source not found ! URL:" + newsSource.link);
+    throw new Error("News were not found ! URL:" + newsSource.link);
   }
 
   const { news } = await extractNewsFromHTMLApi({

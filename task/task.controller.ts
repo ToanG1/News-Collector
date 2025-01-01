@@ -10,6 +10,7 @@ import {
   updateTaskConfig,
 } from "./task.service";
 import { IResponse } from "../common/dto/response.interface";
+import { getNewsApi } from "../news/news.controller";
 
 export const newsCollectorAPI = api({}, async (): Promise<IResponse> => {
   let finishedTaskCount = 0;
@@ -19,6 +20,7 @@ export const newsCollectorAPI = api({}, async (): Promise<IResponse> => {
     await saveTaskLog({ taskId: task.code!, status: Status.IN_PROGRESS });
     try {
       await saveTaskLog({ taskId: task.code!, status: Status.DONE });
+      getNewsApi(task);
       finishedTaskCount++;
     } catch (error: any) {
       await saveTaskLog({

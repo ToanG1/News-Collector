@@ -50,18 +50,16 @@ export const updateTaskConfig = async (
 export const getTasks = async (): Promise<ITaskConfig[]> => {
   const result: ITaskConfig[] = [];
   const rows = await database.query`
-      SELECT T.CODE, T.NAME, C.NAME as "category", NS.LINK, TC.IS_ENABLED, TC.RUN_AT
+      SELECT T.*, TC.IS_ENABLED, TC.RUN_AT
       FROM TASKS T
       JOIN TASK_CONFIGS TC ON T.CODE = TC.TASK_ID
-      JOIN CATEGORY C ON T.CATEGORY_ID = C.ID
-      JOIN NEWS_SOURCES NS ON T.NEWS_SOURCE_ID = NS.ID
   `;
   for await (const row of rows) {
     result.push({
       taskId: row.code,
       name: row.name,
-      category: row.category,
-      source: row.link,
+      categoryId: row.category_id,
+      sourceId: row.news_source_id,
       isEnabled: row.is_enabled,
       runAt: row.run_at,
     });
