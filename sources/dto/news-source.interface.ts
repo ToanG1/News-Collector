@@ -1,5 +1,7 @@
 export interface INewsSource {
   id?: number;
+  publisherId: number;
+  categoryId: number;
   name: string;
   link: string;
   description?: string;

@@ -1,6 +1,7 @@
 import { SQLDatabase } from "encore.dev/storage/sqldb";
 import { ICategory } from "./dto/category.interface";
 import { INewsSource, INewsSourceSelector } from "./dto/news-source.interface";
+import { IPublisher } from "./dto/publisher.interface";
 
 const database = new SQLDatabase("sources", { migrations: "./migrations" });
 
@@ -29,19 +30,23 @@ export const getCategories = async (): Promise<ICategory[]> => {
   return result;
 };
 
-export const getCategoryById = async (
-  id: number
-): Promise<ICategory | null> => {
-  return await database.queryRow<ICategory>`SELECT * FROM CATEGORY WHERE ID = ${id}`;
-};
-
 export const createNewsSource = async (
   newsSource: INewsSource
 ): Promise<void> => {
   await database.exec`
-      INSERT INTO NEWS_SOURCES (NAME, LINK, DESCRIPTION)
+      INSERT INTO NEWS_SOURCES (PUBLISHER_ID, CATEGORY_ID, NAME, LINK, DESCRIPTION, HEADERS)
       VALUES 
-      (${newsSource.name}, ${newsSource.link}, ${newsSource.description || ""})
+      (${newsSource.publisherId}, ${newsSource.categoryId}, ${newsSource.name}, 
+      ${newsSource.link}, ${newsSource.description || null}, ${JSON.stringify(
+    newsSource.headers
+  )})
+    `;
+
+  await database.exec`
+      INSERT INTO NEW_SOURCES_SELECTORS (PUBLISHER_ID, ITEMS, TITLE, IMAGE, POST_LINK, CONTENT)
+      VALUES 
+      (${newsSource.publisherId}, ${newsSource.selector.items}, ${newsSource.selector.title}, 
+      ${newsSource.selector.image}, ${newsSource.selector.postLink}, ${newsSource.selector.content})
     `;
 };
 
@@ -55,6 +60,8 @@ export const getNewsSources = async (): Promise<INewsSource[]> => {
   for await (const row of rows) {
     result.push({
       id: row.id,
+      publisherId: row.publisher_id,
+      categoryId: row.category_id,
       name: row.name,
       link: row.link,
       description: row.description,
@@ -87,6 +94,8 @@ export const getNewsSourceById = async (
 
   return {
     id: row.id,
+    publisherId: row.publisher_id,
+    categoryId: row.category_id,
     name: row.name,
     link: row.link,
     description: row.description,
@@ -111,4 +120,22 @@ export const updateNewsSource = async (
           DESCRIPTION = ${newsSource.description!}
       WHERE ID = ${newsSource.id!}
     `;
+};
+
+export const createPublisher = async (publisher: IPublisher): Promise<void> => {
+  await database.exec`
+      INSERT INTO PUBLISHERS (NAME, LOGO, DESCRIPTION, LINK)
+      VALUES (${publisher.name}, ${publisher.logo}, ${publisher.description}, ${publisher.link})
+    `;
+};
+
+export const getPublishers = async (): Promise<IPublisher[]> => {
+  const result: IPublisher[] = [];
+  const rows = await database.query<IPublisher>`
+      SELECT * FROM PUBLISHERS
+  `;
+  for await (const row of rows) {
+    result.push(row);
+  }
+  return result;
 };

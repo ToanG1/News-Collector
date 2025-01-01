@@ -9,9 +9,11 @@ import {
   createNewsSource,
   getNewsSources,
   updateNewsSource,
-  getCategoryById,
   getNewsSourceById,
+  createPublisher,
+  getPublishers,
 } from "./sources.service";
+import { IPublisher } from "./dto/publisher.interface";
 
 export const addCategoryAPI = api(
   {
@@ -33,22 +35,6 @@ export const getCategoriesAPI = api(
   },
   async (): Promise<{ categories: ICategory[] }> => {
     return { categories: await getCategories() };
-  }
-);
-
-export const getCategoryByIdAPI = api(
-  {
-    expose: true,
-    method: "GET",
-    path: "/sources/category/:id",
-  },
-  async (params: { id: number }): Promise<ICategory> => {
-    const category = await getCategoryById(params.id);
-    if (!category) {
-      throw new APIError(ErrCode.NotFound, "Category not found");
-    }
-
-    return category;
   }
 );
 
@@ -112,5 +98,28 @@ export const updateNewsSourceAPI = api(
   async (request: INewsSource): Promise<IResponse> => {
     await updateNewsSource(request);
     return { message: "News source updated" };
+  }
+);
+
+export const addPublisherAPI = api(
+  {
+    expose: true,
+    method: "POST",
+    path: "/sources/publisher",
+  },
+  async (request: IPublisher): Promise<IResponse> => {
+    await createPublisher(request);
+    return { message: "Publisher added" };
+  }
+);
+
+export const getPublishersAPI = api(
+  {
+    expose: true,
+    method: "GET",
+    path: "/sources/publisher",
+  },
+  async (): Promise<{ publishers: IPublisher[] }> => {
+    return { publishers: await getPublishers() };
   }
 );
