@@ -95,15 +95,15 @@ const extractNewsFromHTMLApi = async (
       .querySelector(request.selectors.title)
       ?.textContent?.replace("\n", "");
 
-    const imageElement = doc.querySelector(request.selectors.image);
+    const imageElement = item.querySelector(request.selectors.image);
     const image =
       imageElement?.getAttribute("data-src-image") ||
       imageElement?.getAttribute("src");
 
-    const link = doc
+    const link = item
       .querySelector(request.selectors.postLink)
       ?.getAttribute("href");
-    const content = doc
+    const content = item
       .querySelector(request.selectors.content)
       ?.textContent?.replace("\n", "");
 
