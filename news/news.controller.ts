@@ -5,7 +5,7 @@ import {
   IFetchResponse,
   IHTTPMethod,
 } from "./dto/fetch.interface";
-import { saveFetchLog, saveNews } from "./news.service";
+import { saveFetchLog, saveNews, getNews } from "./news.service";
 import {
   IExtractedNews,
   IExtractNewsFromHTMLRequest,
@@ -13,6 +13,17 @@ import {
 import { sources } from "~encore/clients";
 import { ITask } from "../task/dto/task.interface";
 import { INewsSource } from "../sources/dto/news-source.interface";
+
+export const getExtractedNewsApi = api(
+  {
+    expose: true,
+    method: "GET",
+    path: "/news/:date",
+  },
+  async (params: { date: string }): Promise<{ news: IExtractedNews[] }> => {
+    return { news: await getNews(params.date) };
+  }
+);
 
 export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
   const newsSource: INewsSource = await sources.getNewsSourceByIdAPI({

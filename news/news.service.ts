@@ -18,3 +18,16 @@ export const saveNews = (newsSourceId: number, news: IExtractedNews[]) => {
       `;
   });
 };
+
+export const getNews = async (date: string): Promise<IExtractedNews[]> => {
+  const result: IExtractedNews[] = [];
+  const rows = database.query<IExtractedNews>`
+    SELECT * FROM NEWS WHERE DATE(timestamp_column) = ${
+      date ? date : "CURRENT_DATE"
+    }
+  `;
+  for await (const row of rows) {
+    result.push(row);
+  }
+  return result;
+};
