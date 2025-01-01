@@ -85,7 +85,7 @@ export const getNewsSourceById = async (
       JOIN NEW_SOURCES_SELECTORS nss ON nss.PUBLISHER_ID = ns.PUBLISHER_ID
       WHERE ns.ID=${id}
   `;
-  console.log(row);
+
   if (!row) {
     return null;
   }

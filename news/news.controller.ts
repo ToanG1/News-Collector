@@ -83,7 +83,9 @@ const extractNewsFromHTMLApi = async (
 
   const items = doc.querySelectorAll(request.selectors.items);
   for (const item of items) {
-    const title = item.querySelector(request.selectors.title)?.textContent;
+    const title = item
+      .querySelector(request.selectors.title)
+      ?.textContent?.replace("\n", "");
 
     const imageElement = doc.querySelector(request.selectors.image);
     const image =
@@ -93,11 +95,15 @@ const extractNewsFromHTMLApi = async (
     const link = doc
       .querySelector(request.selectors.postLink)
       ?.getAttribute("href");
+    const content = doc
+      .querySelector(request.selectors.content)
+      ?.textContent?.replace("\n", "");
 
     news.push({
       title: title || "",
       url: link || "",
       image: image || "",
+      content: content || "",
       date,
     });
   }
