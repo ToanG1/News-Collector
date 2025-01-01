@@ -5,7 +5,7 @@ import {
   IFetchResponse,
   IHTTPMethod,
 } from "./dto/fetch.interface";
-import { saveFetchLog } from "./news.service";
+import { saveFetchLog, saveNews } from "./news.service";
 import {
   IExtractedNews,
   IExtractNewsFromHTMLRequest,
@@ -34,9 +34,7 @@ export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
     selectors: newsSource.selector,
   });
 
-  news.forEach((item) => {
-    console.log(item);
-  });
+  saveNews(task.newsSourceId, news);
 });
 
 const fetchNewsApi = async (
@@ -77,7 +75,6 @@ const fetchNewsApi = async (
 const extractNewsFromHTMLApi = async (
   request: IExtractNewsFromHTMLRequest
 ): Promise<{ news: IExtractedNews[] }> => {
-  const date = new Date().toString();
   const news: IExtractedNews[] = [];
   const doc = new JSDOM(request.html).window.document;
 
@@ -104,7 +101,6 @@ const extractNewsFromHTMLApi = async (
       url: link || "",
       image: image || "",
       content: content || "",
-      date,
     });
   }
 
