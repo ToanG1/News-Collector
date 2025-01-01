@@ -1,3 +1,5 @@
+SET timezone = 'Asia/Ho_Chi_Minh';
+
 CREATE TABLE TASKS (
     ID SERIAL PRIMARY KEY,
     CODE VARCHAR(100) UNIQUE, 

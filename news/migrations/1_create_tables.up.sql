@@ -1,3 +1,5 @@
+SET timezone = 'Asia/Ho_Chi_Minh';
+
 CREATE TABLE FETCH_LOGS (
     ID SERIAL PRIMARY KEY,
     URL VARCHAR(100) NOT NULL,

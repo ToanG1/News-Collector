@@ -1,3 +1,5 @@
+SET timezone = 'Asia/Ho_Chi_Minh';
+
 CREATE TABLE PUBLISHERS (
     ID SERIAL PRIMARY KEY,
     NAME VARCHAR(100) NOT NULL,
