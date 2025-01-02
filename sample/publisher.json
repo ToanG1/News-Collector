@@ -1,1 +1,8 @@
-{"description":"","id":1,"link":"https://vnexpress.net/","logo":"","name":"VnExpress"}
+{
+  "description": "",
+  "link": "https://vnexpress.net/",
+  "logo": "",
+  "name": "VnExpress",
+  "region": "VN",
+  "language": "vi"
+}

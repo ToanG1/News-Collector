@@ -122,8 +122,8 @@ export const updateNewsSource = async (
 
 export const createPublisher = async (publisher: IPublisher): Promise<void> => {
   await database.exec`
-      INSERT INTO PUBLISHERS (NAME, LOGO, DESCRIPTION, LINK)
-      VALUES (${publisher.name}, ${publisher.logo}, ${publisher.description}, ${publisher.link})
+      INSERT INTO PUBLISHERS (NAME, LOGO, DESCRIPTION, LINK, LANGUAGE, REGION)
+      VALUES (${publisher.name}, ${publisher.logo}, ${publisher.description}, ${publisher.link}, ${publisher.language}, ${publisher.region})
     `;
 };
 
