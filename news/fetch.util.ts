@@ -10,8 +10,6 @@ export const fetchScrollableContent = async (url: string): Promise<string> => {
     await page.setDefaultNavigationTimeout(0);
 
     return await fetchContent(page, url);
-  } catch (error) {
-    throw error;
   } finally {
     if (browser) {
       await browser.close();
