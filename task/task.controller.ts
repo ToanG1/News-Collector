@@ -1,8 +1,14 @@
 import { api, APIError } from "encore.dev/api";
 import { Status } from "../common/enums/status.interface";
-import { ITask, ITaskConfig, IUpdateTaskConfig } from "./dto/task.interface";
+import {
+  ITask,
+  ITaskConfig,
+  ITaskLog,
+  IUpdateTaskConfig,
+} from "./dto/task.interface";
 import {
   createTask,
+  getTaskLogsByTaskId,
   getTasks,
   getTasksNeedToRun,
   saveTaskLog,
@@ -84,5 +90,16 @@ export const updateTaskConfigAPI = api(
   async (request: IUpdateTaskConfig): Promise<IResponse> => {
     await updateTaskConfig(request);
     return { message: "Task config updated" };
+  }
+);
+
+export const getTaskLogByTaskIdAPI = api(
+  {
+    expose: true,
+    method: "GET",
+    path: "/task/log/:id",
+  },
+  async (params: { id: string }): Promise<{ logs: ITaskLog[] }> => {
+    return { logs: await getTaskLogsByTaskId(params.id) };
   }
 );

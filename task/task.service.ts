@@ -95,3 +95,21 @@ export const saveTaskLog = async (taskLog: ITaskLog): Promise<void> => {
       (${taskLog.taskId}, ${taskLog.status}, ${taskLog.description || null})
     `;
 };
+
+export const getTaskLogsByTaskId = async (
+  taskId: string
+): Promise<ITaskLog[]> => {
+  const result: ITaskLog[] = [];
+  const rows = await database.query`
+      SELECT * FROM TASK_LOGS WHERE TASK_ID = ${taskId}
+  `;
+  for await (const row of rows) {
+    result.push({
+      taskId: row.task_id,
+      status: row.status,
+      description: row.description,
+      date: new Date(row.created_at),
+    });
+  }
+  return result;
+};

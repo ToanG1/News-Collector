@@ -27,4 +27,5 @@ export interface ITaskLog {
   taskId: string;
   status: Status;
   description?: any;
+  date?: Date;
 }
