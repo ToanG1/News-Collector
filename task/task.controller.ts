@@ -32,7 +32,7 @@ export const newsCollectorAPI = api({}, async (): Promise<IResponse> => {
       await saveTaskLog({
         taskId: task.code!,
         status: Status.FAILED,
-        description: JSON.stringify(error?.details | error),
+        description: JSON.stringify(error),
       });
     }
   }

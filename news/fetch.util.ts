@@ -11,7 +11,7 @@ export const fetchScrollableContent = async (url: string): Promise<string> => {
 
     return await fetchContent(page, url);
   } catch (error) {
-    throw new APIError(ErrCode.Internal, JSON.stringify(error));
+    throw error;
   } finally {
     if (browser) {
       await browser.close();
