@@ -1,43 +1,33 @@
-import puppeteer, { Browser, Page } from "puppeteer";
+import { Builder, By, until } from "selenium-webdriver";
+import firefox from "selenium-webdriver/firefox.js";
 
 export const fetchScrollableContent = async (url: string): Promise<string> => {
-  let browser: Browser | null = null;
+  let driver = await new Builder()
+    .forBrowser("firefox")
+    .setFirefoxOptions(new firefox.Options())
+    .build();
 
   try {
-    browser = await puppeteer.launch({
-      browserWSEndpoint: "wss://chrome.browserless.io",
-      headless: true,
-    });
-    const page: Page = await browser.newPage();
-    await page.setDefaultNavigationTimeout(0);
+    await driver.get(url);
+    await driver.wait(until.elementLocated(By.css("body")), 10000);
 
-    return await fetchContent(page, url);
-  } finally {
-    if (browser) {
-      await browser.close();
-    }
-  }
-};
-
-const fetchContent = async (page: Page, url: string): Promise<string> => {
-  await page.goto(url, { waitUntil: "networkidle2" });
-
-  const scrollToBottom = async (page: Page): Promise<void> => {
-    let previousHeight: number | null = null;
-
+    let previousHeight = await driver.executeScript(
+      "return document.body.scrollHeight"
+    );
     while (true) {
-      previousHeight = await page.evaluate(() => document.body.scrollHeight);
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await new Promise((r) => setTimeout(r, 1000));
-      const newHeight: number = await page.evaluate(
-        () => document.body.scrollHeight
+      await driver.executeScript(
+        "window.scrollTo(0, document.body.scrollHeight)"
       );
-
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      let newHeight = await driver.executeScript(
+        "return document.body.scrollHeight"
+      );
       if (newHeight === previousHeight) break;
+      previousHeight = newHeight;
     }
-  };
 
-  await scrollToBottom(page);
-
-  return await page.evaluate(() => document.body.getHTML());
+    return await driver.getPageSource();
+  } finally {
+    await driver.quit();
+  }
 };
