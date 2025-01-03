@@ -1,11 +1,13 @@
-import { APIError, ErrCode } from "encore.dev/api";
 import puppeteer, { Browser, Page } from "puppeteer";
 
 export const fetchScrollableContent = async (url: string): Promise<string> => {
   let browser: Browser | null = null;
 
   try {
-    browser = await puppeteer.launch({ headless: true });
+    browser = await puppeteer.launch({
+      browserWSEndpoint: "wss://chrome.browserless.io",
+      headless: true,
+    });
     const page: Page = await browser.newPage();
     await page.setDefaultNavigationTimeout(0);
 
