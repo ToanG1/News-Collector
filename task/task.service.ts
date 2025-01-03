@@ -101,7 +101,7 @@ export const getTaskLogsByTaskId = async (
 ): Promise<ITaskLog[]> => {
   const result: ITaskLog[] = [];
   const rows = await database.query`
-      SELECT * FROM TASK_LOGS WHERE TASK_ID = ${taskId}
+      SELECT * FROM TASK_LOGS WHERE TASK_ID = ${taskId} ORDER BY CREATED_AT DESC
   `;
   for await (const row of rows) {
     result.push({
