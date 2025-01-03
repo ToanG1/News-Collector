@@ -1,10 +1,14 @@
 import { Builder, By, until } from "selenium-webdriver";
-import firefox from "selenium-webdriver/firefox.js";
+import * as chrome from "selenium-webdriver/chrome.js";
 
 export const fetchScrollableContent = async (url: string): Promise<string> => {
+  const options = new chrome.Options();
+  options.addArguments("--headless");
+  options.addArguments("--disable-gpu");
+  options.addArguments("--no-sandbox");
   let driver = await new Builder()
-    .forBrowser("firefox")
-    .setFirefoxOptions(new firefox.Options())
+    .forBrowser("chrome")
+    .setChromeOptions(options)
     .build();
 
   try {
