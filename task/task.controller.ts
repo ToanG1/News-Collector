@@ -97,9 +97,12 @@ export const getTaskLogByTaskIdAPI = api(
   {
     expose: true,
     method: "GET",
-    path: "/task/log/:id",
+    path: "/task/log?taskId=:id&date=:date",
   },
-  async (params: { id: string }): Promise<{ logs: ITaskLog[] }> => {
-    return { logs: await getTaskLogsByTaskId(params.id) };
+  async (params: {
+    id: string;
+    date: string;
+  }): Promise<{ logs: ITaskLog[] }> => {
+    return { logs: await getTaskLogsByTaskId(params.id, params.date) };
   }
 );
