@@ -1,37 +1,24 @@
-import { Builder, By, until } from "selenium-webdriver";
-import * as chrome from "selenium-webdriver/chrome.js";
+import puppeteer, { Page, Browser } from "puppeteer";
+
+const delay = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 export const fetchScrollableContent = async (url: string): Promise<string> => {
-  const options = new chrome.Options();
-  options.addArguments("--headless");
-  options.addArguments("--disable-gpu");
-  options.addArguments("--no-sandbox");
-  let driver = await new Builder()
-    .forBrowser("chrome")
-    .setChromeOptions(options)
-    .build();
+  const browser: Browser = await puppeteer.launch();
+  const page: Page = await browser.newPage();
 
-  try {
-    await driver.get(url);
-    await driver.wait(until.elementLocated(By.css("body")), 10000);
+  await page.goto(url);
 
-    let previousHeight = await driver.executeScript(
-      "return document.body.scrollHeight"
-    );
-    while (true) {
-      await driver.executeScript(
-        "window.scrollTo(0, document.body.scrollHeight)"
-      );
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      let newHeight = await driver.executeScript(
-        "return document.body.scrollHeight"
-      );
-      if (newHeight === previousHeight) break;
-      previousHeight = newHeight;
-    }
-
-    return await driver.getPageSource();
-  } finally {
-    await driver.quit();
+  let previousHeight: number;
+  while (true) {
+    previousHeight = await page.evaluate(() => document.body.scrollHeight);
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await delay(1000);
+    const newHeight = await page.evaluate(() => document.body.scrollHeight);
+    if (newHeight === previousHeight) break;
   }
+
+  const content: string = await page.content();
+  await browser.close();
+  return content;
 };
