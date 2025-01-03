@@ -97,7 +97,7 @@ export const getTaskLogByTaskIdAPI = api(
   {
     expose: true,
     method: "GET",
-    path: "/task/log?taskId=:id&date=:date",
+    path: "/task/log/:id/:date",
   },
   async (params: {
     id: string;
