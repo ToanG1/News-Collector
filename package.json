@@ -10,21 +10,14 @@
   },
   "devDependencies": {
     "@types/node": "^20.17.11",
+    "@types/selenium-webdriver": "^4.1.28",
     "typescript": "^5.7.2",
     "vitest": "^1.5.0"
   },
   "dependencies": {
     "@types/jsdom": "^21.1.7",
-    "@types/puppeteer": "^5.4.7",
-    "@types/selenium-webdriver": "^4.1.27",
-    "axios": "^1.7.9",
-    "cheerio": "^1.0.0",
-    "chromedriver": "^131.0.4",
     "encore.dev": "^1.42.1",
-    "geckodriver": "^5.0.0",
     "jsdom": "^25.0.1",
-    "playwright": "^1.49.1",
-    "puppeteer": "^23.11.1",
     "selenium-webdriver": "^4.27.0"
   },
   "optionalDependencies": {
