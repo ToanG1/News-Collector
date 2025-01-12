@@ -13,6 +13,7 @@ import {
   IFetchResponse,
   IHTTPMethod,
 } from "./dto/fetch.interface";
+import { fetchScrollableContent } from "./fetch.util";
 
 export const getExtractedNewsApi = api(
   {
@@ -30,18 +31,20 @@ export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
     id: task.newsSourceId,
   });
 
-  const fetchResponse: IFetchResponse = await fetchNewsApi({
-    url: newsSource.link,
-    method: IHTTPMethod.GET,
-    headers: newsSource.headers,
-  });
+  // const fetchResponse: IFetchResponse = await fetchNewsApi({
+  //   url: newsSource.link,
+  //   method: IHTTPMethod.GET,
+  //   headers: newsSource.headers,
+  // });
 
-  if (!fetchResponse.body) {
-    throw new Error("News were not found ! URL:" + newsSource.link);
-  }
+  // if (!fetchResponse.body) {
+  //   throw new Error("News were not found ! URL:" + newsSource.link);
+  // }
+
+  const html = await fetchScrollableContent(newsSource.link);
 
   const { news } = await extractNewsFromHTMLApi({
-    html: fetchResponse.body,
+    html: html,
     selectors: newsSource.selector,
   });
 

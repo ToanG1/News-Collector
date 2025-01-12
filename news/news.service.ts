@@ -19,6 +19,7 @@ export const saveNews = (newsSourceId: number, news: IExtractedNews[]) => {
   });
 };
 
+
 export const getNews = async (date: string): Promise<IExtractedNews[]> => {
   const result: IExtractedNews[] = [];
   const rows = database.query<IExtractedNews>`
