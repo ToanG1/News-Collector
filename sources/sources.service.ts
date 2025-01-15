@@ -48,11 +48,24 @@ export const createNewsSource = async (
   )})
     `;
 
+  const newSourceId = await database.queryRow`
+        SELECT ID FROM NEWS_SOURCES 
+        WHERE PUBLISHER_ID = ${newsSource.publisherId} AND CATEGORY_ID = ${newsSource.categoryId} AND NAME = ${newsSource.name} AND LINK = ${newsSource.link}
+    `;
+
+  if (!newSourceId) {
+    throw new Error("News source was not created");
+  }
+
   await database.exec`
-      INSERT INTO NEW_SOURCES_SELECTORS (PUBLISHER_ID, ITEMS, TITLE, IMAGE, POST_LINK, CONTENT)
+      INSERT INTO NEW_SOURCES_SELECTORS (NEWS_SOURCES_ID, ITEMS, TITLE, IMAGE, POST_LINK, CONTENT)
       VALUES 
-      (${newsSource.publisherId}, ${newsSource.selector.items}, ${newsSource.selector.title}, 
-      ${newsSource.selector.image}, ${newsSource.selector.postLink}, ${newsSource.selector.content})
+      (${!newSourceId}, ${newsSource.selector.items}, ${
+    newsSource.selector.title
+  }, 
+      ${newsSource.selector.image}, ${newsSource.selector.postLink}, ${
+    newsSource.selector.content
+  })
     `;
 };
 
