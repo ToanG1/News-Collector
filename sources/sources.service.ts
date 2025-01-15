@@ -20,6 +20,12 @@ export const updateCategory = async (category: ICategory): Promise<void> => {
     `;
 };
 
+export const deleteCategory = async (id: number): Promise<void> => {
+  await database.exec`
+      DELETE FROM CATEGORY WHERE ID=${id}
+    `;
+};
+
 export const getCategories = async (): Promise<ICategory[]> => {
   const result: ICategory[] = [];
 
@@ -117,6 +123,12 @@ export const updateNewsSource = async (
           LINK = ${newsSource.link}, 
           DESCRIPTION = ${newsSource.description!}
       WHERE ID = ${newsSource.id!}
+    `;
+};
+
+export const deleteNewsSource = async (id: number): Promise<void> => {
+  await database.exec`
+      DELETE FROM NEWS_SOURCES WHERE ID=${id}
     `;
 };
 

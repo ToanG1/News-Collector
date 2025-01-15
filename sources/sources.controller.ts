@@ -12,6 +12,8 @@ import {
   getNewsSourceById,
   createPublisher,
   getPublishers,
+  deleteCategory,
+  deleteNewsSource,
 } from "./sources.service";
 import { IPublisher } from "./dto/publisher.interface";
 
@@ -47,6 +49,18 @@ export const updateCategoryAPI = api(
   async (request: ICategory): Promise<IResponse> => {
     await updateCategory(request);
     return { message: "Category updated" };
+  }
+);
+
+export const deleteCategoryAPI = api(
+  {
+    expose: true,
+    method: "DELETE",
+    path: "/sources/category/:id",
+  },
+  async (params: { id: number }): Promise<IResponse> => {
+    await deleteCategory(params.id);
+    return { message: "Category deleted" };
   }
 );
 
@@ -98,6 +112,18 @@ export const updateNewsSourceAPI = api(
   async (request: INewsSource): Promise<IResponse> => {
     await updateNewsSource(request);
     return { message: "News source updated" };
+  }
+);
+
+export const deleteNewsSourceAPI = api(
+  {
+    expose: true,
+    method: "DELETE",
+    path: "/sources/news-source/:id",
+  },
+  async (params: { id: number }): Promise<IResponse> => {
+    await deleteNewsSource(params.id);
+    return { message: "News source deleted" };
   }
 );
 
