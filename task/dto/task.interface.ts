@@ -6,7 +6,7 @@ export interface ITask {
   description: string;
   categoryId: number;
   newsSourceId: number;
-  runAt: number;
+  runAt?: number;
 }
 
 export interface ITaskConfig {
