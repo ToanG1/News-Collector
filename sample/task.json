@@ -1,8 +1,19 @@
-{
-  "categoryId": 1,
-  "isEnabled": true,
-  "name": "VnExpress Dashboard",
-  "description": "Dashboard of VnExpress",
-  "runAt": 15,
-  "newsSourceId": 1
-}
+[
+  {
+    "categoryId": 1,
+    "isEnabled": true,
+    "name": "VnExpress Dashboard",
+    "description": "Dashboard of VnExpress",
+    "runAt": 15,
+    "newsSourceId": 1
+  }
+  ,
+  {
+    "categoryId": 2,
+    "isEnabled": true,
+    "name": "VnExpress World",
+    "description": "VnExpress about world's topic",
+    "runAt": 15,
+    "newsSourceId": 2
+  }
+]

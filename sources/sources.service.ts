@@ -56,6 +56,7 @@ export const createNewsSource = async (
   if (!newSourceRow) {
     throw new Error("News source was not created");
   }
+  console.log(newSourceRow!.id);
 
   await database.exec`
       INSERT INTO NEW_SOURCES_SELECTORS (NEWS_SOURCES_ID, ITEMS, TITLE, IMAGE, POST_LINK, CONTENT)
@@ -73,7 +74,7 @@ export const getNewsSources = async (): Promise<INewsSource[]> => {
   const result: INewsSource[] = [];
   const rows = await database.query`
       SELECT ns.ID AS NS_ID, ns.*, nss.* FROM NEWS_SOURCES ns
-      JOIN NEW_SOURCES_SELECTORS nss ON nss.PUBLISHER_ID = ns.PUBLISHER_ID
+      JOIN NEW_SOURCES_SELECTORS nss ON nss.NEWS_SOURCES_ID = ns.ID
   `;
   for await (const row of rows) {
     result.push({

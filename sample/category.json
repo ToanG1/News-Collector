@@ -1,1 +1,5 @@
-{ "description": "Vietnam General", "name": "Vietnam general news" }
+[
+    { "description": "Vietnam General", "name": "Vietnam general news" }
+    ,
+    { "description": "Vietnam World's topics", "name": "Vietnam news about world's topics" }
+]
