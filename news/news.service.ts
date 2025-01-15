@@ -19,11 +19,13 @@ export const saveNews = (newsSourceId: number, news: IExtractedNews[]) => {
   });
 };
 
-
-export const getNews = async (date: string): Promise<IExtractedNews[]> => {
+export const getNews = async (
+  sourceId: number,
+  date: string
+): Promise<IExtractedNews[]> => {
   const result: IExtractedNews[] = [];
   const rows = database.query<IExtractedNews>`
-    SELECT * FROM NEWS WHERE DATE(DATE) = ${date}
+    SELECT * FROM NEWS WHERE DATE(DATE) = ${date} AND NEWS_SOURCE_ID = ${sourceId}
   `;
   for await (const row of rows) {
     result.push(row);

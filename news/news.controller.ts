@@ -19,10 +19,13 @@ export const getExtractedNewsApi = api(
   {
     expose: true,
     method: "GET",
-    path: "/news/:date",
+    path: "/news/:sourceId/:date",
   },
-  async (params: { date: string }): Promise<{ news: IExtractedNews[] }> => {
-    return { news: await getNews(params.date) };
+  async (params: {
+    sourceId: number;
+    date: string;
+  }): Promise<{ news: IExtractedNews[] }> => {
+    return { news: await getNews(params.sourceId, params.date) };
   }
 );
 
@@ -31,20 +34,20 @@ export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
     id: task.newsSourceId,
   });
 
-  // const fetchResponse: IFetchResponse = await fetchNewsApi({
-  //   url: newsSource.link,
-  //   method: IHTTPMethod.GET,
-  //   headers: newsSource.headers,
-  // });
+  const fetchResponse: IFetchResponse = await fetchNewsApi({
+    url: newsSource.link,
+    method: IHTTPMethod.GET,
+    headers: newsSource.headers,
+  });
 
-  // if (!fetchResponse.body) {
-  //   throw new Error("News were not found ! URL:" + newsSource.link);
-  // }
+  if (!fetchResponse.body) {
+    throw new Error("News were not found ! URL:" + newsSource.link);
+  }
 
-  const html = await fetchScrollableContent(newsSource.link);
+  // const html = await fetchScrollableContent(newsSource.link);
 
   const { news } = await extractNewsFromHTMLApi({
-    html: html,
+    html: fetchResponse.body,
     selectors: newsSource.selector,
   });
 

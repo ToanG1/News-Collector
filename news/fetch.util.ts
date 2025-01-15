@@ -1,23 +1,22 @@
-import puppeteer, { Browser, Page } from "puppeteer";
-
-const capabilities = {
-  "tb:options": {
-    key: "TestingBot Secret",
-    secret: "809deda67b66b897d463ecb8fc6361af",
-  },
-  browserName: "chrome",
-  browserVersion: "latest",
-};
+import puppeteer, { Browser, Page } from "puppeteer-core";
 
 export const fetchScrollableContent = async (url: string): Promise<string> => {
   let browser: Browser | null = null;
 
   try {
-    browser = await puppeteer.launch({
+    const capabilities = {
+      "tb:options": {
+        key: "b06a23c6f4c89d909fad9a8b6da26255",
+        secret: "4c20c155d0672dedf6ac23bad99448ce",
+      },
+      browserName: "chrome",
+      browserVersion: "latest",
+    };
+
+    browser = await puppeteer.connect({
       browserWSEndpoint: `wss://cloud.testingbot.com/puppeteer?capabilities=${encodeURIComponent(
         JSON.stringify(capabilities)
       )}`,
-      headless: true,
     });
 
     const page: Page = await browser.newPage();
@@ -40,7 +39,9 @@ const fetchContent = async (page: Page, url: string): Promise<string> => {
     while (true) {
       previousHeight = await page.evaluate(() => document.body.scrollHeight);
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await new Promise((r) => setTimeout(r, 1000));
+
+      await new Promise((r) => setTimeout(r, 3000));
+
       const newHeight: number = await page.evaluate(
         () => document.body.scrollHeight
       );
