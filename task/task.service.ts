@@ -18,8 +18,8 @@ export const createTask = async (task: ITask): Promise<string> => {
     `;
 
   await database.exec`
-        INSERT INTO TASK_CONFIGS (TASK_ID, RUN_AT)
-        VALUES (${taskId}, ${task.runAt || 0})
+        INSERT INTO TASK_CONFIGS (TASK_ID, RUN_AT, IS_ENABLED)
+        VALUES (${taskId}, ${task.runAt || 0}, ${task.isEnabled || false})
     `;
 
   return taskId;

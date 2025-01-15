@@ -56,7 +56,6 @@ export const createNewsSource = async (
   if (!newSourceRow) {
     throw new Error("News source was not created");
   }
-  console.log(newSourceRow!.id);
 
   await database.exec`
       INSERT INTO NEW_SOURCES_SELECTORS (NEWS_SOURCES_ID, ITEMS, TITLE, IMAGE, POST_LINK, CONTENT)

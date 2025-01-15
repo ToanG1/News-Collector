@@ -7,6 +7,7 @@ export interface ITask {
   categoryId: number;
   newsSourceId: number;
   runAt?: number;
+  isEnabled?: boolean;
 }
 
 export interface ITaskConfig {
