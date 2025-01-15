@@ -102,7 +102,7 @@ export const getNewsSourceById = async (
 ): Promise<INewsSource | null> => {
   const row = await database.queryRow`
       SELECT ns.*, nss.* FROM NEWS_SOURCES ns
-      JOIN NEW_SOURCES_SELECTORS nss ON nss.PUBLISHER_ID = ns.PUBLISHER_ID
+      JOIN NEW_SOURCES_SELECTORS nss ON nss.NEWS_SOURCES_ID = ns.ID
       WHERE ns.ID=${id}
   `;
 
