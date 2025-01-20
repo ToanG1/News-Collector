@@ -1,6 +1,6 @@
 import { api } from "encore.dev/api";
 import { JSDOM } from "jsdom";
-import { saveFetchLog, saveNews, getNews } from "./news.service";
+import { saveNews, getNews } from "./news.service";
 import {
   IExtractedNews,
   IExtractNewsFromHTMLRequest,
@@ -8,12 +8,7 @@ import {
 import { sources } from "~encore/clients";
 import { ITask } from "../task/dto/task.interface";
 import { INewsSource } from "../sources/dto/news-source.interface";
-import {
-  IFetchRequest,
-  IFetchResponse,
-  IHTTPMethod,
-} from "./dto/fetch.interface";
-import { fetchScrollableContent } from "./fetch.util";
+import { fetchByScraperApi } from "./fetch.util";
 
 export const getExtractedNewsApi = api(
   {
@@ -34,60 +29,15 @@ export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
     id: task.newsSourceId,
   });
 
-  const fetchResponse: IFetchResponse = await fetchNewsApi({
-    url: newsSource.link,
-    method: IHTTPMethod.GET,
-    headers: newsSource.headers,
-  });
-
-  if (!fetchResponse.body) {
-    throw new Error("News were not found ! URL:" + newsSource.link);
-  }
-
-  // const html = await fetchScrollableContent(newsSource.link);
+  const html = await fetchByScraperApi(newsSource.link);
 
   const { news } = await extractNewsFromHTMLApi({
-    html: fetchResponse.body,
+    html: html,
     selectors: newsSource.selector,
   });
 
   saveNews(task.newsSourceId, news);
 });
-
-const fetchNewsApi = async (
-  request: IFetchRequest
-): Promise<IFetchResponse> => {
-  saveFetchLog(request.url);
-
-  const response = await fetch(request.url, {
-    method: request.method,
-    headers: request.headers,
-  });
-
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
-
-  let body: any;
-  try {
-    body = await response.text();
-  } catch (e) {
-    body = null;
-  }
-
-  let json: any;
-  try {
-    json = await response.json();
-  } catch (e) {
-    json = null;
-  }
-
-  return {
-    status: response.status,
-    body: body,
-    json: json,
-  };
-};
 
 const extractNewsFromHTMLApi = async (
   request: IExtractNewsFromHTMLRequest

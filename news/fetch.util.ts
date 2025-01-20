@@ -1,56 +1,17 @@
-import puppeteer, { Browser, Page } from "puppeteer-core";
+const api_key = "4d021a2652f2e157e0c048649703ece1";
 
-export const fetchScrollableContent = async (url: string): Promise<string> => {
-  let browser: Browser | null = null;
+const scraperAPI = "https://api.scraperapi.com";
+const customizeHeaders = "country_code=vn&device_type=desktop&render=true";
 
-  try {
-    const capabilities = {
-      "tb:options": {
-        key: "b06a23c6f4c89d909fad9a8b6da26255",
-        secret: "4c20c155d0672dedf6ac23bad99448ce",
-      },
-      browserName: "chrome",
-      browserVersion: "latest",
-    };
-
-    browser = await puppeteer.connect({
-      browserWSEndpoint: `wss://cloud.testingbot.com/puppeteer?capabilities=${encodeURIComponent(
-        JSON.stringify(capabilities)
-      )}`,
-    });
-
-    const page: Page = await browser.newPage();
-    await page.setDefaultNavigationTimeout(0);
-
-    return await fetchContent(page, url);
-  } finally {
-    if (browser) {
-      await browser.close();
-    }
-  }
-};
-
-const fetchContent = async (page: Page, url: string): Promise<string> => {
-  await page.goto(url, { waitUntil: "networkidle2" });
-
-  const scrollToBottom = async (page: Page): Promise<void> => {
-    let previousHeight: number | null = null;
-
-    while (true) {
-      previousHeight = await page.evaluate(() => document.body.scrollHeight);
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-
-      await new Promise((r) => setTimeout(r, 3000));
-
-      const newHeight: number = await page.evaluate(
-        () => document.body.scrollHeight
-      );
-
-      if (newHeight === previousHeight) break;
-    }
-  };
-
-  await scrollToBottom(page);
-
-  return await page.evaluate(() => document.body.getHTML());
+export const fetchByScraperApi = async (url: string) => {
+  const response = await fetch(
+    `${scraperAPI}?api_key=${api_key}&url=${encodeURIComponent(
+      url
+    )}&${customizeHeaders}`
+  );
+  if (response.status !== 200)
+    throw new Error(
+      `Scraper response failed with code: ${response.status} \n ${response.statusText}`
+    );
+  return response.text();
 };

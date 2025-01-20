@@ -29,7 +29,6 @@ export const newsCollectorAPI = api({}, async (): Promise<IResponse> => {
       await saveTaskLog({ taskId: task.code!, status: Status.DONE });
       finishedTaskCount++;
     } catch (error: unknown) {
-      console.log(error);
       await saveTaskLog({
         taskId: task.code!,
         status: Status.FAILED,
