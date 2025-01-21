@@ -31,7 +31,7 @@ export const getKeyApi = api(
     path: "/news/getkey",
   },
   async (): Promise<IResponse> => {
-    return { message: API_KEY.toString() };
+    return { message: JSON.stringify(API_KEY) };
   }
 );
 
