@@ -40,12 +40,10 @@ export const createNewsSource = async (
   newsSource: INewsSource
 ): Promise<void> => {
   await database.exec`
-      INSERT INTO NEWS_SOURCES (PUBLISHER_ID, CATEGORY_ID, NAME, LINK, DESCRIPTION, HEADERS)
+      INSERT INTO NEWS_SOURCES (PUBLISHER_ID, CATEGORY_ID, NAME, LINK, DESCRIPTION)
       VALUES 
       (${newsSource.publisherId}, ${newsSource.categoryId}, ${newsSource.name}, 
-      ${newsSource.link}, ${newsSource.description || null}, ${JSON.stringify(
-    newsSource.headers
-  )})
+      ${newsSource.link}, ${newsSource.description || null})
     `;
 
   const newSourceRow = await database.queryRow`
@@ -83,7 +81,6 @@ export const getNewsSources = async (): Promise<INewsSource[]> => {
       name: row.name,
       link: row.link,
       description: row.description,
-      headers: JSON.parse(row.headers),
       selector: {
         items: row.items,
         title: row.title,
@@ -116,7 +113,6 @@ export const getNewsSourceById = async (
     name: row.name,
     link: row.link,
     description: row.description,
-    headers: JSON.parse(row.headers),
     selector: {
       items: row.items,
       title: row.title,

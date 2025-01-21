@@ -6,7 +6,7 @@ export interface ITask {
   description: string;
   categoryId: number;
   newsSourceId: number;
-  runAt?: number;
+  runAt?: number[];
   isEnabled?: boolean;
 }
 
@@ -16,13 +16,13 @@ export interface ITaskConfig {
   categoryId: number;
   sourceId: string;
   isEnabled: boolean;
-  runAt: number;
+  runAt: number[];
 }
 
 export interface IUpdateTaskConfig {
   taskId: string;
   isEnabled: boolean;
-  runAt: number;
+  runAt: number[];
 }
 
 export interface ITaskLog {

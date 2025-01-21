@@ -6,6 +6,7 @@ import {
   IUpdateTaskConfig,
 } from "./dto/task.interface";
 import { randomUUID } from "crypto";
+import { listJoinedDelimiter } from "../common/constant/demiliter.constant";
 
 const database = new SQLDatabase("task", { migrations: "./migrations" });
 
@@ -19,7 +20,9 @@ export const createTask = async (task: ITask): Promise<string> => {
 
   await database.exec`
         INSERT INTO TASK_CONFIGS (TASK_ID, RUN_AT, IS_ENABLED)
-        VALUES (${taskId}, ${task.runAt || 0}, ${task.isEnabled || false})
+        VALUES (${taskId}, ${task.runAt?.join(listJoinedDelimiter) || 0}, ${
+    task.isEnabled || false
+  })
     `;
 
   return taskId;
@@ -42,7 +45,7 @@ export const updateTaskConfig = async (
   await database.exec`
       UPDATE TASK_CONFIGS
       SET IS_ENABLED = ${task.isEnabled}, 
-          RUN_AT = ${task.runAt}
+          RUN_AT = ${task.runAt.join(listJoinedDelimiter)}
       WHERE TASK_ID = ${task.taskId}
       `;
 };
@@ -61,7 +64,7 @@ export const getTasks = async (): Promise<ITaskConfig[]> => {
       categoryId: row.category_id,
       sourceId: row.news_source_id,
       isEnabled: row.is_enabled,
-      runAt: row.run_at,
+      runAt: row.run_at.split(listJoinedDelimiter),
     });
   }
   return result;
@@ -74,7 +77,7 @@ export const getTasksNeedToRun = async (): Promise<ITask[]> => {
       FROM TASKS T
       JOIN TASK_CONFIGS TC ON T.CODE = TC.TASK_ID
       WHERE TC.IS_ENABLED = true
-      AND TC.RUN_AT = EXTRACT(HOUR FROM CURRENT_TIMESTAMP);
+      AND EXTRACT(HOUR FROM CURRENT_TIMESTAMP)::TEXT = ANY (STRING_TO_ARRAY(TC.RUN_AT, ','));
   `;
   for await (const row of rows) {
     result.push({
