@@ -1,4 +1,4 @@
-const api_key = "4d021a2652f2e157e0c048649703ece1";
+const api_key = "afc2e1950d778afa90b42bbad5a08cc1";
 
 const scraperAPI = "https://api.scraperapi.com";
 const customizeHeaders = "country_code=vn&device_type=desktop&render=true";
