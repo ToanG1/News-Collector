@@ -16,3 +16,5 @@ export const fetchByScraperApi = async (url: string) => {
     );
   return response.text();
 };
+
+export const API_KEY = api_key;
