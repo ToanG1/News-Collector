@@ -8,8 +8,7 @@ import {
 import { sources } from "~encore/clients";
 import { ITask } from "../task/dto/task.interface";
 import { INewsSource } from "../sources/dto/news-source.interface";
-import { API_KEY, fetchByScraperApi } from "./fetch.util";
-import { IResponse } from "../common/dto/response.interface";
+import { fetchByScraperApi } from "./fetch.util";
 
 export const getExtractedNewsApi = api(
   {
@@ -22,16 +21,6 @@ export const getExtractedNewsApi = api(
     date: string;
   }): Promise<{ news: IExtractedNews[] }> => {
     return { news: await getNews(params.sourceId, params.date) };
-  }
-);
-
-export const getKeyApi = api(
-  {
-    method: "GET",
-    path: "/news/getkey",
-  },
-  async (): Promise<IResponse> => {
-    return { message: JSON.stringify(API_KEY) };
   }
 );
 

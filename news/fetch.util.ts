@@ -5,7 +5,7 @@ const api_url = "https://api.scraperapi.com";
 const customizeHeaders = "country_code=vn&device_type=desktop&render=true";
 
 export const fetchByScraperApi = async (url: string) => {
-  const reqUrl = `${api_url}?api_key=${api_key}&url=${encodeURIComponent(
+  const reqUrl = `${api_url}?api_key=${api_key()}&url=${encodeURIComponent(
     url
   )}&${customizeHeaders}`;
 
@@ -16,5 +16,3 @@ export const fetchByScraperApi = async (url: string) => {
     );
   return response.text();
 };
-
-export const API_KEY = api_key;
