@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@types/jsdom": "^21.1.7",
-    "encore.dev": "^1.42.1",
+    "encore.dev": "^1.46.0",
     "jsdom": "^25.0.1"
   },
   "optionalDependencies": {
