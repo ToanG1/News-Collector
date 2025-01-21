@@ -9,6 +9,7 @@ import { sources } from "~encore/clients";
 import { ITask } from "../task/dto/task.interface";
 import { INewsSource } from "../sources/dto/news-source.interface";
 import { API_KEY, fetchByScraperApi } from "./fetch.util";
+import { IResponse } from "../common/dto/response.interface";
 
 export const getExtractedNewsApi = api(
   {
@@ -29,8 +30,8 @@ export const getKeyApi = api(
     method: "GET",
     path: "/news/getkey",
   },
-  async (): Promise<string> => {
-    return API_KEY.toString();
+  async (): Promise<IResponse> => {
+    return { message: API_KEY.toString() };
   }
 );
 
