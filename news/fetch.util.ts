@@ -12,7 +12,7 @@ export const fetchByScraperApi = async (url: string) => {
   const response = await fetch(reqUrl);
   if (response.status !== 200)
     throw new Error(
-      `Scraper response failed with code: ${response.status} \n ${response.statusText}`
+      `URL: ${url} \nScraper response failed with code: ${response.status} \n ${response.statusText}`
     );
   return response.text();
 };
