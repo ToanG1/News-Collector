@@ -8,7 +8,7 @@ import {
 import { sources } from "~encore/clients";
 import { ITask } from "../task/dto/task.interface";
 import { INewsSource } from "../sources/dto/news-source.interface";
-import { fetchByScraperApi } from "./fetch.util";
+import { fetchByScraperApi } from "../common/utils/fetch.util";
 
 export const getExtractedNewsApi = api(
   {
