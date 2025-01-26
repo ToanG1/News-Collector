@@ -1,6 +1,6 @@
 import { api } from "encore.dev/api";
 import { JSDOM } from "jsdom";
-import { saveNews, getNews } from "./news.service";
+import { getNews } from "./news.service";
 import {
   IExtractedNews,
   IExtractNewsFromHTMLRequest,
@@ -9,6 +9,7 @@ import { sources } from "~encore/clients";
 import { ITask } from "../task/dto/task.interface";
 import { INewsSource } from "../sources/dto/news-source.interface";
 import { fetchByScraperApi } from "../common/utils/fetch.util";
+import { saveNewsEvent } from "./news.pubsub";
 
 export const getExtractedNewsApi = api(
   {
@@ -36,7 +37,11 @@ export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
     selectors: newsSource.selector,
   });
 
-  saveNews(task.newsSourceId, news);
+  saveNewsEvent.publish({
+    newsSourceId: task.newsSourceId,
+    news: news,
+    date: new Date().toISOString().split("T")[0],
+  });
 });
 
 const extractNewsFromHTMLApi = async (
