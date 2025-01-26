@@ -10,6 +10,9 @@ import { ITask } from "../task/dto/task.interface";
 import { INewsSource } from "../sources/dto/news-source.interface";
 import { fetchByScraperApi } from "../common/utils/fetch.util";
 import { saveNewsEvent } from "./news.pubsub";
+import { secret } from "encore.dev/config";
+
+const api_key = secret("SCRAPER_API_KEY");
 
 export const getExtractedNewsApi = api(
   {
@@ -30,7 +33,7 @@ export const getNewsApi = api({}, async (task: ITask): Promise<void> => {
     id: task.newsSourceId,
   });
 
-  const html = await fetchByScraperApi(newsSource.link);
+  const html = await fetchByScraperApi(newsSource.link, api_key());
 
   const { news } = await extractNewsFromHTMLApi({
     html: html,
